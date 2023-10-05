@@ -1,4 +1,6 @@
 from src.phonebook import Phonebook
+from src.phonebook import valid_name
+from src.phonebook import valid_number
 
 class TestPhonebook:
 
@@ -13,6 +15,37 @@ class TestPhonebook:
 
         # Chamada
         resposta = phonebook.add("Talita", "24988281352")
+
+        # Avaliação
+        assert resposta_esperada == resposta
+
+    def test_add_numero_menor_zero(self):
+        # Setup
+        phonebook = Phonebook()
+        resposta_esperada = 'Numero invalido'
+
+        # Chamada
+        resposta = phonebook.add("Talita", "-2")
+
+        # Avaliação
+        assert resposta_esperada == resposta
+
+    def test_valid_name(self):
+        # Setup
+        resposta_esperada = 'Nome invalido'
+
+        # Chamada
+        resposta = valid_name('#' or '@' or '!' or '$' or '$')
+
+        # Avaliação
+        assert resposta_esperada == resposta
+
+    def test_valid_numer(self):
+        # Setup
+        resposta_esperada = 'Numero invalido'
+
+        # Chamada
+        resposta = valid_number('-2')
 
         # Avaliação
         assert resposta_esperada == resposta
@@ -104,3 +137,4 @@ class TestPhonebook:
 
         # Avaliação
         assert resposta_esperada == resposta
+
