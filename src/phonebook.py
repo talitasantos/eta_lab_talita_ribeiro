@@ -1,17 +1,26 @@
+"""
+Escopo:
+● 1 – Escrever testes unitários
+● 2 – Achar bugs
+● 3 – Melhorar código
+● 4- Corrigir bugs
+● 5 – Usar TDD para adicionar o método:
+○ change_number(self, name, number)
+● 6 – Usar TDD para adicionar o método:
+○ get_name_by_number(self, number)
+
+"""
+
+
 def valid_name(name):
-    if isinstance(name, str) and name.isalpha():
+    if isinstance(name, str) and name.isalpha() and name is not None:
         return True
     else:
         return 'Nome invalido'
-    # special_chars = ['#', '@', '!', '$', '%']
-    # for i in special_chars:
-    #     if i in name:
-    #         return 'Nome invalido'
-    # return True
 
 
 def valid_number(number):
-    if isinstance(number, str) and number.isdigit() and int(number) >= 0:
+    if isinstance(number, str) and number.isdigit() and number is not None:
         return True
     else:
         return 'Numero invalido'
@@ -29,23 +38,10 @@ class Phonebook:
         :return: 'Nome invalido' or 'Numero invalido' or 'Numero adicionado'
         """
 
-        """
-        Código muito repetivo e mensagens erradas.
-        if '#' in name:
-            return 'Nome invalido'
-        if '@' in name:
-            return 'Nme invalido'
-        if '!' in name:
-            return 'Nome invalido'
-        if '$' in name:
-            return 'Nome invalio'
-        if '%' in name:
-            return 'Nome invalido'
-        """
         # Método para validar se um nome é válido e uma string
         valid_name(name)
 
-        # Método para validar se umm nome é string, um digito e maior que zero
+        # Método para validar se um numero é string e um digito
         valid_number(number)
 
         if name not in self.entries:
@@ -59,46 +55,46 @@ class Phonebook:
         :return: return number of person with name
         """
 
-        """
-        Código muito repetivo e mensagens erradas.
-        if '#' in name:
-            return 'Nome invaldo'
-        if '@' in name:
-            return 'Nome invalido'
-        if '!' in name:
-            return 'Nme invalido' #bug: deveria ser Nome invalido
-        if '$' in name:
-            return 'Nome invalido'
-        if '%' in name:
-            return 'Nome nvalido' #bug: deveria ser Nome invalido
-        """
-
-        # Método para validar se um nome é válido
+        # Método para validar se um nome é válido e uma string
         valid_name(name)
 
         return self.entries[name]
 
     def get_names(self):
         """
-MELHORAR A PARTIR DAQUI!
         :return: return all names in phonebook
         """
-        return self.entries.keys()
+        if self.entries == {}:
+            return "Nao possui registro"
+        else:
+            names = []
+            for key in self.entries.keys():
+                names.append(key)
+            return names
 
     def get_numbers(self):
         """
 
         :return: return all numbers in phonebook
         """
-        return self.entries.values()
+        if self.entries == {}:
+            return "Nao possui registro"
+        else:
+            values = []
+            for value in self.entries.values():
+                values.append(value)
+            return values
 
     def clear(self):
         """
         Clear all phonebook
         :return: return 'phonebook limpado'
         """
-        self.entries = {}
-        return 'phonebook limpado'
+        if self.entries == {}:
+            return 'O Phonebook vazio'
+        else:
+            self.entries = {}
+            return 'Phonebook limpado'
 
     def search(self, search_name):
         """
@@ -109,9 +105,10 @@ MELHORAR A PARTIR DAQUI!
         result = []
         for name, number in self.entries.items():
             # Tem que retornar a lista do que da match com o termo de busca
-            # if search_name not in name:
             if search_name in name:
                 result.append({name, number})
+            else:
+                return 'Nome não encontrado'
         return result
 
     def get_phonebook_sorted(self):
@@ -119,14 +116,28 @@ MELHORAR A PARTIR DAQUI!
 
         :return: return phonebook in sorted order
         """
-        return self.entries
+        if self.entries == {}:
+            return "Phonebook vazio"
+        else:
+            lista = []
+            for name, number in self.entries.items():
+                lista.append([name, number])
+            lista.sort()
+            return lista
 
     def get_phonebook_reverse(self):
         """
 
         :return: return phonebook in reverse sorted order
         """
-        return self.entries
+        if self.entries == {}:
+            return "Phonebook vazio"
+        else:
+            lista = []
+            for name, number in self.entries.items():
+                lista.append([name, number])
+            lista.sort(reverse=True)
+            return lista
 
     def delete(self, name):
         """
@@ -134,5 +145,25 @@ MELHORAR A PARTIR DAQUI!
         :param name: String with name
         :return: return 'Numero deletado'
         """
-        self.entries.pop(name)
-        return 'Numero deletado'
+        if self.entries != {}:
+            if name in self.entries:
+                self.entries.pop(name)
+                return "Numero deletado"
+            return "Registro nao encontrado"
+        return "Phonebook vazio"
+
+    def change_number(self, name, new_number):
+        if name in self.entries:
+            if new_number is not None:
+                self.entries[new_number] = self.entries.pop(name)
+                return "Numero de telefone alterado com sucessso"
+            return "Nao foi possivel alterar numero"
+        return "Nao foi possivel encontrar o numero"
+
+    def get_name_by_number(self, search_number):
+        if self.entries != {}:
+            for name, number in self.entries.items():
+                if search_number == number:
+                    return f"Registro encontrado: {name}"
+            return "Registro nao encontrado"
+        return "Phonebook vazio"
